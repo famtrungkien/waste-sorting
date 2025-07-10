@@ -90,145 +90,7 @@ plt.show()
 ```
 ![alt text](https://i.ibb.co/4wJ56yTR/dataset.png)
 # 1. CNN Model
-## 1.1 Training of CNN Model
-```python
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Activation, Dropout, Flatten, Dense, BatchNormalization
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
-from tensorflow.keras.utils import plot_model
-import matplotlib.pyplot as plt
-import tensorflow as tf
-import os
-import numpy as np
-import random
-import tensorflow as tf
-
-# Path to dataset
-train_path = "/kaggle/input/waste-classification-data/DATASET/TRAIN/"
-test_path = "/kaggle/input/waste-classification-data/DATASET/TEST/"
-
-seed_value = 30
-batch_size = 64  
-target_size = (224, 224)
-np.random.seed(seed_value)
-random.seed(seed_value)
-tf.random.set_seed(seed_value)
-
-# Data enhancement
-train_datagen = ImageDataGenerator(
-    rescale=1./255,
-    rotation_range=30,             # invert rotate 30 độ
-    width_shift_range=0.2,         # horizontal trans 20%
-    height_shift_range=0.2,        # vertical trans 20%
-    zoom_range=0.2,                # zoom in/out 20%
-    horizontal_flip=True,          # flip right/left
-    brightness_range=[0.8, 1.2],   # brightness
-)
-test_datagen = ImageDataGenerator(
-    rescale=1./255,
-)
-
-# Load dataset
-train_generator = train_datagen.flow_from_directory(
-    train_path,
-    target_size=target_size,
-    batch_size=batch_size,
-    class_mode='categorical',
-    seed=seed_value
-)
-
-test_generator = test_datagen.flow_from_directory(
-    test_path,
-    target_size=target_size,
-    batch_size=batch_size,
-    class_mode='categorical',
-    seed=seed_value
-)
-
-# Build model
-model = Sequential()
-
-# Conv Block 1
-model.add(Conv2D(32, (3, 3), input_shape=(224, 224, 3)))
-model.add(BatchNormalization())
-model.add(Activation('relu'))
-model.add(MaxPooling2D())
-
-# Conv Block 2
-model.add(Conv2D(64, (3, 3)))
-model.add(BatchNormalization())
-model.add(Activation('relu'))
-model.add(MaxPooling2D())
-
-# Conv Block 3
-model.add(Conv2D(128, (3, 3)))
-model.add(BatchNormalization())
-model.add(Activation('relu'))
-model.add(MaxPooling2D())
-
-# Fully connected layers
-model.add(Flatten())
-model.add(Dense(256))
-model.add(BatchNormalization())
-model.add(Activation('relu'))
-model.add(Dropout(0.5))
-
-model.add(Dense(64))
-model.add(BatchNormalization())
-model.add(Activation('relu'))
-model.add(Dropout(0.5))
-
-# Output layer
-model.add(Dense(2, activation='softmax'))  
-
-# Compile model
-model.compile(
-    loss='categorical_crossentropy',
-    optimizer=tf.keras.optimizers.Adam(learning_rate=0.0001),
-    metrics=['accuracy']
-)
-
-# Draw model
-plot_model(model, to_file='cnn_model.png', show_shapes=True, show_layer_names=True)
-from IPython.display import Image
-Image('cnn_model.png')
-
-model.summary()
-
-# Callbacks
-early_stop = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
-reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=3, min_lr=1e-6)
-
-# Train
-history = model.fit(
-    train_generator,
-    epochs=30,  
-    validation_data=test_generator,
-    callbacks=[early_stop, reduce_lr]
-)
-
-# Save
-model.save('waste_classifier_model.h5')
-
-# Draw chart
-plt.figure(figsize=(12, 6))
-plt.subplot(1, 2, 1)
-plt.plot(history.history['accuracy'], label='Train Accuracy')
-plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
-plt.legend()
-plt.title('Accuracy over epochs')
-
-plt.subplot(1, 2, 2)
-plt.plot(history.history['loss'], label='Train Loss')
-plt.plot(history.history['val_loss'], label='Validation Loss')
-plt.legend()
-plt.title('Loss over epochs')
-plt.show()
-```
-![alt text](https://i.ibb.co/ksYfJVJb/cnn-model.png)
-
-## 1.2 Evaluation of CNN Model
+## 1.1 Evaluation of CNN Model
 
 ```python
 import tensorflow as tf
@@ -302,61 +164,9 @@ print('Classification Report:')
 print(report)
 ```
 ![alt text](https://i.ibb.co/ksYfJVJb/cnn-model.png)
-## 1.3 Pruning Model 
-```python
-import numpy as np
-import tensorflow as tf
-from tensorflow.keras.preprocessing import image
-import numpy as np
-from PIL import Image
-import cv2
-import matplotlib.pyplot as plt
-import os
-import cv2
-import numpy as np
-from tensorflow.keras.models import load_model
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
-# Load model
-model = load_model('/kaggle/input/cnn_waste_model/tensorflow2/default/1/waste_classifier_model.h5')
 
-threshold = 0.001
-
-# Iterate through each layer of the model
-for layer in model.layers:
-    if hasattr(layer, 'weights'):
-        weights = layer.get_weights()
-        # Update weights
-        new_weights = []
-        for w in weights:
-            w[np.abs(w) < threshold] = 0
-            new_weights.append(w)
-        layer.set_weights(new_weights)
-
-model.save('pruned_cnn_model.h5')  # save pruned model
-print("saved pruned cnn model")
-```
-![alt text](https://i.ibb.co/kVVFVYRc/pruned-cnn.png)
-
-## 1.4. Quantization of CNN model
-```python
-import tensorflow as tf
-from tensorflow.keras.models import load_model
-
-# Load pruned model
-pruned_model = tf.keras.models.load_model('/kaggle/input/pruned_cnn/tensorflow2/default/1/pruned_cnn_model.h5')
-
-converter = tf.lite.TFLiteConverter.from_keras_model(pruned_model)
-converter.optimizations = [tf.lite.Optimize.DEFAULT]
-tflite_quantized_model = converter.convert()
-
-# save quantized model
-with open('model_cnn_quantized.tflite', 'wb') as f:
-    f.write(tflite_quantized_model)
-```
-![alt text](https://i.ibb.co/VY3MtCks/quantized-cnn.png)
-
-## 1.5. Evaluation of PQ-CNN model
+## 1.2. Evaluation of PQ-CNN model
 ```python
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
@@ -476,7 +286,7 @@ print(report)
 ```
 ![alt text](https://i.ibb.co/wFF9Y3rz/pq-cnn.png)
 
-## 1.6.  Example of PQ-CNN Model Prediction
+## 1.3.  Example of PQ-CNN Model Prediction
 
 ```python
 import os
@@ -598,7 +408,7 @@ print(f"Average processing time per image: {all_time/10} s")
 ### Raspberry Pi 5
 ![alt text](https://i.ibb.co/5W8NsWKh/cnn-log.png)
 
-## 1.7. Compare the sizes of CNN, pruned, quantized models.
+## 1.4. Compare the sizes of CNN, pruned, quantized models.
 ```python
 import os
 def getsize(path):
@@ -617,135 +427,8 @@ print(f"Quantized CNN model reduce: {getsize(path_cnn)/getsize(path_quantized_cn
 ![alt text](https://i.ibb.co/PZM8Yb2k/size-compare.png)
 
 # 2. ConvNext Model
-## 2.1. Training ConvNext Model
-```python
-import torch
-import torch.nn as nn
-import torch.optim as optim
-from torchvision import datasets, transforms, models
-import os
-from pathlib import Path
-from torch.utils.data import DataLoader
-import torch.nn.functional as F
-import random
-import numpy as np
 
-# Set device
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-# Path to dataset
-train_dir = "/kaggle/input/waste-classification-data/DATASET/TRAIN/"
-test_dir = "/kaggle/input/waste-classification-data/DATASET/TEST/"
-model_path = 'convnext_rac_model.pth'
-
-# train function
-def train(model, loader, criterion, optimizer, epochs=1):
-    model.train()
-    for epoch in range(epochs):
-        total_loss = 0
-        for images, labels in loader:
-            images = images.to(device)
-            labels = labels.to(device)
-            optimizer.zero_grad()
-            outputs = model(images)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
-            total_loss += loss.item()
-        print(f"Epoch [{epoch+1}/{epochs}], Loss: {total_loss/len(loader):.4f}")
-
-# Avaluation Function
-def evaluate(model, loader):
-    model.eval()
-    correct = 0
-    total = 0
-    with torch.no_grad():
-        for images, labels in loader:
-            images = images.to(device)
-            labels = labels.to(device)
-            outputs = model(images)
-            _, predicted = torch.max(outputs, 1)
-            correct += (predicted == labels).sum().item()
-            total += labels.size(0)
-    print(f'Accuracy: {100 * correct / total:.2f}%')
-
-seed_value = 0
-torch.manual_seed(seed_value)
-np.random.seed(seed_value)
-random.seed(seed_value)
-if torch.cuda.is_available():
-    torch.cuda.manual_seed_all(seed_value)
-
-torch.backends.cudnn.deterministic = True
-torch.backends.cudnn.benchmark = False
-
-# Transform dataset
-transform = transforms.Compose([
-    transforms.Resize((224, 224)),
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                         std=[0.229, 0.224, 0.225])
-])
-
-# Create dataset
-train_dataset = datasets.ImageFolder(train_dir, transform=transform)
-test_dataset = datasets.ImageFolder(test_dir, transform=transform)
-# Create dataloader
-train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
-
-# Init ConvNeXt Model
-model = models.convnext_tiny(pretrained=True)
-
-
-model.classifier[2] = nn.Linear(model.classifier[2].in_features, 2)
-
-model = model.to(device)
-
-# set loss and optimizer func
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.AdamW(model.parameters(), lr=1e-4)
-
-# Train model
-train(model, train_loader, criterion, optimizer, epochs=1)
-
-# Evaluation 
-evaluate(model, test_loader)
-
-# Save Model
-torch.save(model.state_dict(), model_path)
-print(f"Mô hình đã lưu tại {model_path}")
-
-# --- reload model
-
-# load saved model 
-model_loaded = models.convnext_tiny(pretrained=False)
-model_loaded.classifier[2] = nn.Linear(model_loaded.classifier[2].in_features, 2)
-model_loaded.load_state_dict(torch.load(model_path))
-model_loaded = model_loaded.to(device)
-model_loaded.eval()
-
-# Predict
-def predict_image(image_path, model):
-    image = transforms.Compose([
-        transforms.Resize((224, 224)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                             std=[0.229, 0.224, 0.225])
-    ])(Image.open(image_path).convert('RGB'))
-
-    image = image.unsqueeze(0).to(device)
-    with torch.no_grad():
-        output = model(image)
-        probs = F.softmax(output, dim=1)
-        pred_class = torch.argmax(probs, dim=1).item()
-        class_name = train_dataset.classes[pred_class]
-        confidence = probs[0][pred_class].item()
-    return class_name, confidence
-
-```
-![alt text](https://i.ibb.co/gL6ymdRs/train-convnext.png)
-## 2.2. Evaluation of ConvNext Model
+## 2.1. Evaluation of ConvNext Model
 ```python
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
@@ -856,7 +539,7 @@ print(report)
 ```
 ![alt text](https://i.ibb.co/d06cngYh/convnext.png)
 
-## 2.3 Example of ConvneXt model Prediction
+## 2.2 Example of ConvneXt model Prediction
 ```python
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
