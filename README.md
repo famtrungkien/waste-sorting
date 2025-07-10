@@ -339,7 +339,6 @@ model.save('pruned_cnn_model.h5')  # save pruned model
 print("saved pruned cnn model")
 ```
 ![alt text](https://i.ibb.co/kVVFVYRc/pruned-cnn.png)
-
 ## 1.4. Quantization of CNN model
 ```python
 
