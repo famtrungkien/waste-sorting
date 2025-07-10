@@ -90,7 +90,7 @@ plt.show()
 ```
 ![alt text](https://i.ibb.co/4wJ56yTR/dataset.png)
 # 1. CNN Model
-## 1.1 Training off CNN Model
+## 1.1 Training of CNN Model
 ```python
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Activation, Dropout, Flatten, Dense, BatchNormalization
@@ -104,32 +104,32 @@ import numpy as np
 import random
 import tensorflow as tf
 
-# Đường dẫn dữ liệu
+# Path to dataset
 train_path = "/kaggle/input/waste-classification-data/DATASET/TRAIN/"
 test_path = "/kaggle/input/waste-classification-data/DATASET/TEST/"
 
 seed_value = 30
-batch_size = 64  # Thay đổi phù hợp hơn
+batch_size = 64  
 target_size = (224, 224)
 np.random.seed(seed_value)
 random.seed(seed_value)
 tf.random.set_seed(seed_value)
 
-# Tăng cường dữ liệu
+# Data enhancement
 train_datagen = ImageDataGenerator(
     rescale=1./255,
-    rotation_range=30,             # Quay ngược 30 độ
-    width_shift_range=0.2,         # Dịch chuyển ngang 20%
-    height_shift_range=0.2,        # Dịch chuyển dọc 20%
-    zoom_range=0.2,                # Phóng to/thu nhỏ 20%
-    horizontal_flip=True,          # Lật phải/trái
-    brightness_range=[0.8, 1.2], # Điều chỉnh độ sáng
+    rotation_range=30,             # invert rotate 30 độ
+    width_shift_range=0.2,         # horizontal trans 20%
+    height_shift_range=0.2,        # vertical trans 20%
+    zoom_range=0.2,                # zoom in/out 20%
+    horizontal_flip=True,          # flip right/left
+    brightness_range=[0.8, 1.2],   # brightness
 )
 test_datagen = ImageDataGenerator(
     rescale=1./255,
 )
 
-# Load dữ liệu
+# Load dataset
 train_generator = train_datagen.flow_from_directory(
     train_path,
     target_size=target_size,
@@ -146,7 +146,7 @@ test_generator = test_datagen.flow_from_directory(
     seed=seed_value
 )
 
-# Xây dựng mô hình
+# Build model
 model = Sequential()
 
 # Conv Block 1
@@ -180,7 +180,7 @@ model.add(Activation('relu'))
 model.add(Dropout(0.5))
 
 # Output layer
-model.add(Dense(2, activation='softmax'))  # Dùng softmax cho phân loại đa lớp
+model.add(Dense(2, activation='softmax'))  
 
 # Compile model
 model.compile(
@@ -189,7 +189,7 @@ model.compile(
     metrics=['accuracy']
 )
 
-# Vẽ mô hình
+# Draw model
 plot_model(model, to_file='cnn_model.png', show_shapes=True, show_layer_names=True)
 from IPython.display import Image
 Image('cnn_model.png')
@@ -200,18 +200,18 @@ model.summary()
 early_stop = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
 reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=3, min_lr=1e-6)
 
-# Huấn luyện
+# Train
 history = model.fit(
     train_generator,
-    epochs=30,  # Tăng số epochs để có thể tinh chỉnh tốt hơn
+    epochs=30,  
     validation_data=test_generator,
     callbacks=[early_stop, reduce_lr]
 )
 
-# Lưu mô hình
+# Save
 model.save('waste_classifier_model.h5')
 
-# Vẽ biểu đồ
+# Draw chart
 plt.figure(figsize=(12, 6))
 plt.subplot(1, 2, 1)
 plt.plot(history.history['accuracy'], label='Train Accuracy')
@@ -268,8 +268,8 @@ def predict_fun(img):
     image_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     # Resize to (224x224)
     resized_img = cv2.resize(image_rgb, (224, 224))
-    # onvert to float32
-    resized_img = resized_img.astype('float32') / 255.0  # Mô hình được huấn luyện với dữ liệu chuẩn hóa 0-1
+    # Convert to float32
+    resized_img = resized_img.astype('float32') / 255.0  
     # add batch dimension
     input_img = np.expand_dims(resized_img, axis=0)
     # predict
@@ -317,10 +317,8 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
-
 # Load model
 model = load_model('/kaggle/input/cnn_waste_model/tensorflow2/default/1/waste_classifier_model.h5')
-
 
 threshold = 0.001
 
@@ -339,9 +337,9 @@ model.save('pruned_cnn_model.h5')  # save pruned model
 print("saved pruned cnn model")
 ```
 ![alt text](https://i.ibb.co/kVVFVYRc/pruned-cnn.png)
+
 ## 1.4. Quantization of CNN model
 ```python
-
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 
@@ -632,15 +630,15 @@ import torch.nn.functional as F
 import random
 import numpy as np
 
-# Đặt device
+# Set device
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-# Đường dẫn dữ liệu
+# Path to dataset
 train_dir = "/kaggle/input/waste-classification-data/DATASET/TRAIN/"
 test_dir = "/kaggle/input/waste-classification-data/DATASET/TEST/"
 model_path = 'convnext_rac_model.pth'
 
-# Hàm huấn luyện
+# train function
 def train(model, loader, criterion, optimizer, epochs=1):
     model.train()
     for epoch in range(epochs):
@@ -656,7 +654,7 @@ def train(model, loader, criterion, optimizer, epochs=1):
             total_loss += loss.item()
         print(f"Epoch [{epoch+1}/{epochs}], Loss: {total_loss/len(loader):.4f}")
 
-# Hàm đánh giá
+# Avaluation Function
 def evaluate(model, loader):
     model.eval()
     correct = 0
@@ -681,7 +679,7 @@ if torch.cuda.is_available():
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
 
-# Transform dữ liệu
+# Transform dataset
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
@@ -689,45 +687,45 @@ transform = transforms.Compose([
                          std=[0.229, 0.224, 0.225])
 ])
 
-# Tạo dataset
+# Create dataset
 train_dataset = datasets.ImageFolder(train_dir, transform=transform)
 test_dataset = datasets.ImageFolder(test_dir, transform=transform)
-# Tạo dataloader
+# Create dataloader
 train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 
-# Khởi tạo mô hình ConvNeXt
+# Init ConvNeXt Model
 model = models.convnext_tiny(pretrained=True)
 
-# Thay đổi lớp cuối để phù hợp với 2 lớp (Vô cơ và Hữu cơ)
+
 model.classifier[2] = nn.Linear(model.classifier[2].in_features, 2)
 
 model = model.to(device)
 
-# Đặt hàm loss và optimizer
+# set loss and optimizer func
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.AdamW(model.parameters(), lr=1e-4)
 
-# Đào tạo mô hình
+# Train model
 train(model, train_loader, criterion, optimizer, epochs=1)
 
-# Đánh giá mô hình
+# Evaluation 
 evaluate(model, test_loader)
 
-# Lưu mô hình
+# Save Model
 torch.save(model.state_dict(), model_path)
 print(f"Mô hình đã lưu tại {model_path}")
 
-# --- Load lại mô hình và dự đoán một ảnh trong thư mục O ---
+# --- reload model
 
-# Tải mô hình đã lưu
+# load saved model 
 model_loaded = models.convnext_tiny(pretrained=False)
 model_loaded.classifier[2] = nn.Linear(model_loaded.classifier[2].in_features, 2)
 model_loaded.load_state_dict(torch.load(model_path))
 model_loaded = model_loaded.to(device)
 model_loaded.eval()
 
-# Hàm dự đoán
+# Predict
 def predict_image(image_path, model):
     image = transforms.Compose([
         transforms.Resize((224, 224)),
@@ -745,14 +743,6 @@ def predict_image(image_path, model):
         confidence = probs[0][pred_class].item()
     return class_name, confidence
 
-from PIL import Image
-
-# Đường dẫn ảnh trong thư mục O
-sample_image_path = '/kaggle/input/waste-classification-data/DATASET/TEST/O/O_12568.jpg'  # Thay bằng đường dẫn thực tế
-
-# Dự đoán
-predicted_class, confidence = predict_image(sample_image_path, model_loaded)
-print(f'Ảnh dự đoán là: {predicted_class} với độ tin cậy {confidence:.2f}')
 ```
 ![alt text](https://i.ibb.co/gL6ymdRs/train-convnext.png)
 ## 2.2. Evaluation of ConvNext Model
@@ -776,15 +766,15 @@ from pathlib import Path
 from torch.utils.data import DataLoader
 import torch.nn.functional as F
 
-# Đặt device
+# setdevice
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model_path = '/kaggle/input/convnext98/tensorflow2/default/1/convnext_rac_model_98.pth'
 
-# Đường dẫn dữ liệu
+# path to dataset
 train_dir = "/kaggle/input/waste-classification-data/DATASET/TRAIN/"
 test_dir = "/kaggle/input/waste-classification-data/DATASET/TEST/"
 
-# Transform dữ liệu
+# Transform dataset
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
@@ -792,22 +782,22 @@ transform = transforms.Compose([
                          std=[0.229, 0.224, 0.225])
 ])
 
-# Tạo dataset
+# Create dataset
 train_dataset = datasets.ImageFolder(train_dir, transform=transform)
 test_dataset = datasets.ImageFolder(test_dir, transform=transform)
 
-# Thư mục chứa dữ liệu test
+# Folder data
 folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
 folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
 
-# Tải mô hình đã lưu
+# Load saved model
 model = models.convnext_tiny(pretrained=False)
 model.classifier[2] = nn.Linear(model.classifier[2].in_features, 2)
 model.load_state_dict(torch.load(model_path))
 model = model.to(device)
 model.eval()
 
-# Hàm dự đoán
+# predict function
 def predict_image(image_path, model):
     image = transforms.Compose([
         transforms.Resize((224, 224)),
@@ -825,7 +815,7 @@ def predict_image(image_path, model):
         confidence = probs[0][pred_class].item()
     #return class_name, confidence
 
-# Lớp 0 là hữu cơ, lớp 1 là vô cơ
+
     if class_name == 'O':
         #print('The image is Organic Waste')
         return 0
@@ -834,7 +824,7 @@ def predict_image(image_path, model):
         return 1
         
 from PIL import Image
-# Hàm load ảnh và tiền xử lý
+# preprocessing images
 def load_y_test(folder, label):
     y_test = []
     y_pred = []
@@ -842,7 +832,7 @@ def load_y_test(folder, label):
         img_path = os.path.join(folder, filename)
         #img = cv2.imread(img_path)
         if img_path is not None:
-            # Resize ảnh về kích thước phù hợp, ví dụ 224x224
+            # Resize  224x224
             prediction = predict_image(img_path, model)
             y_test.append(label)
             y_pred.append(prediction)
@@ -854,13 +844,13 @@ y_test = np.array(y_test_0 + y_test_1)
 y_pred = np.array(y_pred_0 + y_pred_1)
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy: {accuracy:.2f}')
-# Bảng phân biệt nhầm lẫn
+# Confusion matrix
 cm = confusion_matrix(y_test, y_pred)
 print('Confusion Matrix:')
 print(cm)
 
-# Báo cáo phân loại
-report = classification_report(y_test, y_pred, target_names=['Vô cơ', 'Hữu cơ'])
+# report
+report = classification_report(y_test, y_pred, target_names=['InOrganic', 'Organic'])
 print('Classification Report:')
 print(report)
 ```
@@ -984,7 +974,6 @@ for i in range(6):
 
 plt.tight_layout()
 plt.show()
-
 print(f"Average processing time per image: {all_time/10} s")
 ```
 ### a. Kaggle
@@ -1011,11 +1000,11 @@ from tensorflow.keras.preprocessing.image import load_img, img_to_array
 # Load model
 model = load_model('/kaggle/input/vgg16_model/tensorflow2/default/1/vgg16_O_R_classifier.keras')
 
-# Thư mục chứa dữ liệu test
+#  testing set path
 folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
 folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
 
-# Hàm image
+# image
 def load_y_test(folder, label):
     y_test = []
     y_pred = []
@@ -1037,8 +1026,7 @@ def predict_fun(img_path):
     
     # Predict
     prediction = model.predict(x, verbose=None)
-    
-    
+   
     if prediction[0][0] >= 0.5:
         return 1
     else:
@@ -1146,7 +1134,6 @@ for i in range(6):
 
 plt.tight_layout()
 plt.show()
-
 print(f"Average processing time per image: {all_time/10} s")
 ```
 ### a. Kaggle
@@ -1194,7 +1181,7 @@ def predict_fun(img):
     # Resize image (224x224)
     resized_img = cv2.resize(image_rgb, (224, 224))
     # Convert float32
-    resized_img = resized_img.astype('float32') / 255.0  # Mô hình được huấn luyện với dữ liệu chuẩn hóa 0-1
+    resized_img = resized_img.astype('float32') / 255.0 
     # add batch dimension
     input_img = np.expand_dims(resized_img, axis=0)
     # predict
@@ -1360,7 +1347,7 @@ def predict_fun(img):
     # Resize  (224x224)
     resized_img = cv2.resize(image_rgb, (224, 224))
     # Convert float32
-    resized_img = resized_img.astype('float32') / 255.0  # Mô hình được huấn luyện với dữ liệu chuẩn hóa 0-1
+    resized_img = resized_img.astype('float32') / 255.0  
     # add batch dimension
     input_img = np.expand_dims(resized_img, axis=0)
     # predict
@@ -1388,7 +1375,7 @@ print('Confusion Matrix:')
 print(cm)
 
 # report
-report = classification_report(y_test, y_pred, target_names=['Vô cơ', 'Hữu cơ'])
+report = classification_report(y_test, y_pred, target_names=['Inorganic', 'Organic'])
 print('Classification Report:')
 print(report)
 ```
@@ -1518,8 +1505,8 @@ def predict_fun(img):
     image_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     # Resize (224x224)
     resized_img = cv2.resize(image_rgb, (224, 224))
-    # Cconvert float32
-    resized_img = resized_img.astype('float32') / 255.0  # Mô hình được huấn luyện với dữ liệu chuẩn hóa 0-1
+    # Convert float32
+    resized_img = resized_img.astype('float32') / 255.0  
     # add batch dimension
     input_img = np.expand_dims(resized_img, axis=0)
     # predict
@@ -1703,7 +1690,7 @@ plt.show()
 ```python
 import numpy as np
 
-# Ma trận nhầm lẫn của các mô hình
+# Confusion matries
 cmats = [
     np.array([[1331, 70], 
               [165, 947]]),   # CNN
@@ -1724,14 +1711,14 @@ def tinh_mdr_fdr(cmats):
     for idx, cm in enumerate(cmats):
         total = np.sum(cm)
         sai = np.sum(cm) - np.trace(cm)
-        false_positive = cm[0,1]  # Dự đoán sai là false positive
+        false_positive = cm[0,1] 
         total_sai = sai
         total_fp = false_positive
 
-        # Tính MDR
+        # Calculate MDR
         mdr = sai / total if total > 0 else 0
 
-        # Tính FDR
+        # Calculate FDR
         fdr = false_positive / sai if sai > 0 else 0
         results.append({
             'model_index': idx + 1,
