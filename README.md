@@ -2,12 +2,12 @@
 
 In this notebook we will deal with a dataset containing 25,000 images of waste. This task is to build a model to classify this waste into organic waste and recyclable waste. We will experiment with this to Raspberry Pi hardware with flowing classifiers:
 
-* 1. Pruning-Quantization-CNN
-* 2. ConvneXt
-* 3. Resnet
-* 4. VGG
-* 5. EfficientNet
-* 6. MobileNet
+* Pruning-Quantization-CNN
+* ConvneXt
+* Resnet
+* VGG
+* EfficientNet
+* MobileNet
 
 ## Image Visualization & Processing¶
 
