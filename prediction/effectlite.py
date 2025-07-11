@@ -15,7 +15,7 @@ from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning) 
 
-model = load_model('my_model_effectlite.h5')
+model = load_model('models/effectlite_model.h5')
 
 
 def predict_fun(img_path):
