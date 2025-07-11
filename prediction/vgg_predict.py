@@ -35,7 +35,7 @@ def predict_fun(img_path):
         return 'Organic Waste'
 
 fig, axes = plt.subplots(2, 3, figsize=(12, 8))
-axes = axes.flatten()  # Convert to 1D for easier handling
+axes = axes.flatten()  
 all_time = 0
 
 for i in range(6):
@@ -57,7 +57,7 @@ for i in range(6):
 plt.tight_layout()
 plt.show()
 fig, axes = plt.subplots(2, 3, figsize=(12, 8))
-axes = axes.flatten()  # Convert to 1D for easier handling
+axes = axes.flatten()  
 for i in range(6):
     # Create figure to display
     img_path = 'DATASET/TEST/R/R_' + str(10000+i) + '.jpg'
