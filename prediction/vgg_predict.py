@@ -14,7 +14,7 @@ from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning) 
 
-model = load_model('vgg16_O_R_classifier.keras')
+model = load_model('models/vgg16_model.keras')
 
 
 def predict_fun(img_path):
