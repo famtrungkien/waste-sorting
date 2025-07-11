@@ -12,7 +12,7 @@ import time
 
 
 
-model_path = 'model_quantized.tflite'
+model_path = 'models/model_quantized.tflite'
 # Load model TFLite
 def load_tflite_model(model_path):
     interpreter = tf.lite.Interpreter(model_path=model_path)
