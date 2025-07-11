@@ -1,7 +1,6 @@
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 import numpy as np
@@ -16,7 +15,6 @@ import warnings
 warnings.filterwarnings("ignore", category=UserWarning) 
 
 model = load_model('models/mobilenetv2_model.h5')
-
 
 def predict_fun(img_path):
     # Upload and process images
@@ -35,9 +33,6 @@ def predict_fun(img_path):
     else:
         print("The predicted image is ORGANIC")
         return 'Organic Waste'
-
-
-
 
 fig, axes = plt.subplots(2, 3, figsize=(12, 8))
 axes = axes.flatten()  # Convert to 1D for easier handling
@@ -60,11 +55,8 @@ for i in range(6):
     axes[i].set_title(prediction)
     axes[i].axis('off') 
 
-
-
 plt.tight_layout()
 plt.show()
-
 
 fig, axes = plt.subplots(2, 3, figsize=(12, 8))
 axes = axes.flatten()  # Chuyển sang dạng 1 chiều để dễ xử lý
@@ -83,13 +75,7 @@ for i in range(6):
     axes[i].imshow(img)
     axes[i].set_title(prediction)
     axes[i].axis('off')  
-
-
-
 plt.tight_layout()
 plt.show()
-
-
-
 
 print(f"Average processing time per image: {all_time/10} s")
