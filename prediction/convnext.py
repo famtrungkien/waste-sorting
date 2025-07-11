@@ -26,7 +26,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 # Set device to CPU
 device = torch.device('cpu')
 
-model_path  = 'convnext_rac_model.pth'
+model_path  = 'models/convnext_model.pth'
 
 # Dataset path
 train_dir = "DATASET/TRAIN/"
