@@ -1,7 +1,6 @@
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 import numpy as np
@@ -9,8 +8,6 @@ from PIL import Image
 import cv2
 import matplotlib.pyplot as plt
 import time
-
-
 
 model_path = 'models/model_quantized.tflite'
 # Load model TFLite
@@ -68,8 +65,7 @@ def predict_fun(image_path):
     else:
         print("The image is ORGANIC")
         return 'Inorganic Waste';
-   
-        
+
 fig, axes = plt.subplots(2, 3, figsize=(12, 8))
 axes = axes.flatten()  
 all_time = 0
@@ -111,5 +107,4 @@ for i in range(6):
 
 plt.tight_layout()
 plt.show()
-
 print(f"Average processing time per image: {all_time/10} s")
