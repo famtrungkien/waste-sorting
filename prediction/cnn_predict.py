@@ -82,13 +82,13 @@ for i in range(6):
     img = Image.open(img_path)
     axes[i].imshow(img)
     axes[i].set_title(prediction)
-    axes[i].axis('off')  # Tắt trục để xem ảnh rõ hơn
+    axes[i].axis('off')  
 
 plt.tight_layout()
 plt.show()
 
 fig, axes = plt.subplots(2, 3, figsize=(12, 8))
-axes = axes.flatten()  # Chuyển sang dạng 1 chiều để dễ xử lý
+axes = axes.flatten() 
 
 for i in range(6):
     # Tạo figure để hiển thị
@@ -103,7 +103,7 @@ for i in range(6):
     img = Image.open(img_path)
     axes[i].imshow(img)
     axes[i].set_title(prediction)
-    axes[i].axis('off')  # Tắt trục để xem ảnh rõ hơn
+    axes[i].axis('off')  
 
 plt.tight_layout()
 plt.show()
