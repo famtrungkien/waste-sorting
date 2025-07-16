@@ -1,7 +1,6 @@
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 import numpy as np
@@ -11,12 +10,9 @@ import matplotlib.pyplot as plt
 import time
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
-
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning) 
-
-model = load_model('my_model_effectlite.h5')
-
+model = load_model('models/efficientnet_model.h5')
 
 def predict_fun(img_path):
     # Upload and process images
@@ -35,9 +31,6 @@ def predict_fun(img_path):
     else:
         print("The predicted image is ORGANIC")
         return 'Organic Waste'
-
-
-
 
 fig, axes = plt.subplots(2, 3, figsize=(12, 8))
 axes = axes.flatten()  
@@ -60,11 +53,8 @@ for i in range(6):
     axes[i].set_title(prediction)
     axes[i].axis('off')
 
-
-
 plt.tight_layout()
 plt.show()
-
 
 fig, axes = plt.subplots(2, 3, figsize=(12, 8))
 axes = axes.flatten()  
@@ -84,12 +74,7 @@ for i in range(6):
     axes[i].set_title(prediction)
     axes[i].axis('off')  
 
-
-
 plt.tight_layout()
 plt.show()
-
-
-
 
 print(f"Average processing time per image: {all_time/10} s")

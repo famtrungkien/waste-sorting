@@ -1,7 +1,6 @@
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 import numpy as np
@@ -10,9 +9,7 @@ import cv2
 import matplotlib.pyplot as plt
 import time
 
-
-
-model_path = 'model_quantized.tflite'
+model_path = 'models/model_quantized.tflite'
 # Load model TFLite
 def load_tflite_model(model_path):
     interpreter = tf.lite.Interpreter(model_path=model_path)
@@ -68,8 +65,7 @@ def predict_fun(image_path):
     else:
         print("The image is ORGANIC")
         return 'Inorganic Waste';
-   
-        
+
 fig, axes = plt.subplots(2, 3, figsize=(12, 8))
 axes = axes.flatten()  
 all_time = 0
@@ -86,13 +82,13 @@ for i in range(6):
     img = Image.open(img_path)
     axes[i].imshow(img)
     axes[i].set_title(prediction)
-    axes[i].axis('off')  # Tắt trục để xem ảnh rõ hơn
+    axes[i].axis('off')  
 
 plt.tight_layout()
 plt.show()
 
 fig, axes = plt.subplots(2, 3, figsize=(12, 8))
-axes = axes.flatten()  # Chuyển sang dạng 1 chiều để dễ xử lý
+axes = axes.flatten() 
 
 for i in range(6):
     # Tạo figure để hiển thị
@@ -107,9 +103,8 @@ for i in range(6):
     img = Image.open(img_path)
     axes[i].imshow(img)
     axes[i].set_title(prediction)
-    axes[i].axis('off')  # Tắt trục để xem ảnh rõ hơn
+    axes[i].axis('off')  
 
 plt.tight_layout()
 plt.show()
-
 print(f"Average processing time per image: {all_time/10} s")
