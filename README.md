@@ -21,11 +21,11 @@ import warnings
 import os
 warnings.filterwarnings('ignore')
 
-train_path0 = "/kaggle/input/waste-classification-data/DATASET/TRAIN/O"
-train_path1 = "/kaggle/input/waste-classification-data/DATASET/TRAIN/R"
+train_path0 = "DATASET/TRAIN/O"
+train_path1 = "DATASET/TRAIN/R"
 
-test_path0 = "/kaggle/input/waste-classification-data/DATASET/TEST/O"
-test_path1 = "/kaggle/input/waste-classification-data/DATASET/TEST/R"
+test_path0 = "DATASET/TEST/O"
+test_path1 = "DATASET/TEST/R"
 
 import fnmatch
 
@@ -57,8 +57,8 @@ def load_data(path):
     data = pd.DataFrame({'image' : x_data, 'label' : y_data})
     return data
 
-train_path = "/kaggle/input/waste-classification-data/DATASET/TRAIN/"
-test_path = "/kaggle/input/waste-classification-data/DATASET/TEST/"
+train_path = "DATASET/TRAIN/"
+test_path = "DATASET/TEST/"
 
 # Load train data
 train_data = load_data(train_path)
@@ -106,11 +106,11 @@ from tensorflow.keras.models import load_model
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # Load model
-model = load_model('/kaggle/input/cnn_waste_model/tensorflow2/default/1/waste_classifier_model.h5')
+model = load_model('models/my_cnn_model.h5')
 
 # Test path folders
-folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
-folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
+folder_O = 'DATASET/TEST/O'
+folder_R = 'DATASET/TEST/R'
 
 # load image 
 def load_y_test(folder, label):
@@ -141,7 +141,7 @@ def predict_fun(img):
         #print('The image is Organic Waste')
         return 0
     elif result == 1:
-        #print('The image is Inorganic Waste')
+        #print('The image is Recycle Waste')
         return 1
         
 y_test_0, y_pred_0 =  load_y_test(folder_O, 0)
@@ -159,11 +159,11 @@ print('Confusion Matrix:')
 print(cm)
 
 # report classification
-report = classification_report(y_test, y_pred, target_names=['InOrganic', 'Organic'])
+report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle'])
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://i.ibb.co/ksYfJVJb/cnn-model.png)
+![alt text](https://i.ibb.co/cKXsy8G4/cnn-model.png)
 
 
 ## 1.2. Evaluation of PQ-CNN model
@@ -193,10 +193,10 @@ import matplotlib.pyplot as plt
 import time
 
 # Test path folders
-folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
-folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
+folder_O = 'DATASET/TEST/O'
+folder_R = 'DATASET/TEST/R'
 
-model_path = '/kaggle/input/quantized_model/tensorflow2/default/1/quantized_cnn_model.tflite'
+model_path = 'models/model_cnn_quantized.tflite'
 
 # Load model TFLite
 def load_tflite_model(model_path):
@@ -280,11 +280,11 @@ print('Confusion Matrix:')
 print(cm)
 
 # report classification
-report = classification_report(y_test, y_pred, target_names=['InOrganic', 'Organic'])
+report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle'])
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://i.ibb.co/wFF9Y3rz/pq-cnn.png)
+![alt text](https://i.ibb.co/mC9RDJ52/cnn-model-without-prq.png)
 
 ## 1.3.  Example of PQ-CNN Model Prediction
 
@@ -301,7 +301,7 @@ import cv2
 import matplotlib.pyplot as plt
 import time
 
-model_path = '/kaggle/input/quantized_model/tensorflow2/default/1/quantized_cnn_model.tflite'
+model_path = 'models/model_cnn_quantized.tflite'
 # Load model TFLite
 def load_tflite_model(model_path):
     interpreter = tf.lite.Interpreter(model_path=model_path)
@@ -352,18 +352,18 @@ def predict_fun(image_path):
 
     predicted_class = np.argmax(predictions)
     if predicted_class == 0:
-        print("The image is INORGANIC")
+        print("The image is Organic")
         return 'Organic Waste';
     else:
-        print("The image is ORGANIC")
-        return 'Inorganic Waste';
+        print("The image is Recycle")
+        return 'Recycle Waste';
          
 fig, axes = plt.subplots(2, 3, figsize=(12, 8))
 axes = axes.flatten()  
 all_time = 0
 for i in range(6):
     # Create figure to display
-    img_path = '/kaggle/input/waste-classification-data/DATASET/TEST/O/O_' + str(12568+i) + '.jpg'
+    img_path = 'DATASET/TEST/O/O_' + str(12568+i) + '.jpg'
     start = time.time()
     prediction = predict_fun(img_path)
     end = time.time()
@@ -384,7 +384,7 @@ axes = axes.flatten()
 
 for i in range(6):
     # create figure
-    img_path = '/kaggle/input/waste-classification-data/DATASET/TEST/R/R_' + str(10400+i) + '.jpg'
+    img_path = 'DATASET/TEST/R/R_' + str(10400+i) + '.jpg'
     start = time.time()
     prediction = predict_fun(img_path)
     end = time.time()
@@ -414,8 +414,8 @@ import os
 def getsize(path):
     return os.path.getsize(path)
 
-path_cnn = 'waste_classifier_model.h5'
-path_quantized_cnn = 'quantized_cnn_model.tflite'
+path_cnn = 'my_cnn_model.h5'
+path_quantized_cnn = 'model_cnn_quantized.tflite'
 path_pruned_cnn= 'pruned_cnn_model.h5'
 
 print(f"Size of CNN model: {getsize(path_cnn)/1000000}MB")
@@ -451,11 +451,11 @@ import torch.nn.functional as F
 
 # setdevice
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model_path = '/kaggle/input/convnext98/tensorflow2/default/1/convnext_rac_model_98.pth'
+model_path = 'model/convnext_rac_model.pth'
 
 # path to dataset
-train_dir = "/kaggle/input/waste-classification-data/DATASET/TRAIN/"
-test_dir = "/kaggle/input/waste-classification-data/DATASET/TEST/"
+train_dir = "DATASET/TRAIN/"
+test_dir = "DATASET/TEST/"
 
 # Transform dataset
 transform = transforms.Compose([
@@ -470,8 +470,8 @@ train_dataset = datasets.ImageFolder(train_dir, transform=transform)
 test_dataset = datasets.ImageFolder(test_dir, transform=transform)
 
 # Folder data
-folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
-folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
+folder_O = 'DATASET/TEST/O'
+folder_R = 'DATASET/TEST/R'
 
 # Load saved model
 model = models.convnext_tiny(pretrained=False)
@@ -503,7 +503,7 @@ def predict_image(image_path, model):
         #print('The image is Organic Waste')
         return 0
     elif class_name == 'R':
-        #print('The image is Inorganic Waste')
+        #print('The image is Recycle Waste')
         return 1
         
 from PIL import Image
@@ -533,7 +533,7 @@ print('Confusion Matrix:')
 print(cm)
 
 # report
-report = classification_report(y_test, y_pred, target_names=['InOrganic', 'Organic'])
+report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle'])
 print('Classification Report:')
 print(report)
 ```
@@ -569,11 +569,11 @@ warnings.filterwarnings("ignore", category=UserWarning)
 # Set device to CPU
 device = torch.device('cpu')
 
-model_path  = '/kaggle/input/convnext98/tensorflow2/default/1/convnext_rac_model_98.pth'
+model_path  = 'models/convnext_rac_model.pth'
 
 # Dataset path
-train_dir = "/kaggle/input/waste-classification-data/DATASET/TRAIN/"
-test_dir = "/kaggle/input/waste-classification-data/DATASET/TEST/"
+train_dir = "DATASET/TRAIN/"
+test_dir = "DATASET/TEST/"
 
 # Transform dataset
 transform = transforms.Compose([
@@ -611,7 +611,7 @@ def predict_fun(image_path, model):
         class_name = train_dataset.classes[pred_class]
         confidence = probs[0][pred_class].item()
     if class_name == 'R':
-        return 'Inorganic Waste'
+        return 'Recycle Waste'
     if class_name == 'O':
         return 'Organic Waste'
    
@@ -622,7 +622,7 @@ all_time = 0  # Initialize timer variable
 
 for i in range(6):
     # Sample image path
-    img_path = f'/kaggle/input/waste-classification-data/DATASET/TEST/O/O_{12568 + i}.jpg'
+    img_path = f'DATASET/TEST/O/O_{12568 + i}.jpg'
     start = time.time()
     prediction = predict_fun(img_path, model_loaded)
     end = time.time()
@@ -642,7 +642,7 @@ fig, axes = plt.subplots(2, 3, figsize=(12, 8))
 axes = axes.flatten()
 
 for i in range(6):
-    img_path = f'/kaggle/input/waste-classification-data/DATASET/TEST/R/R_{10400 + i}.jpg'
+    img_path = f'DATASET/TEST/R/R_{10400 + i}.jpg'
     start = time.time()
     prediction = predict_fun(img_path, model_loaded)
     end = time.time()
@@ -681,11 +681,11 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 
 # Load model
-model = load_model('/kaggle/input/vgg16_model/tensorflow2/default/1/vgg16_O_R_classifier.keras')
+model = load_model('models/vgg16_O_R_classifier.keras')
 
 #  testing set path
-folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
-folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
+folder_O = 'DATASET/TEST/O'
+folder_R = 'DATASET/TEST/R'
 
 # image
 def load_y_test(folder, label):
@@ -730,7 +730,7 @@ print('Confusion Matrix:')
 print(cm)
 
 # report
-report = classification_report(y_test, y_pred, target_names=['Inorganic', 'Organic'])
+report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle'])
 print('Classification Report:')
 print(report)
 ```
@@ -753,7 +753,7 @@ from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning) 
 
-model = load_model('/kaggle/input/vgg16_model/tensorflow2/default/1/vgg16_O_R_classifier.keras')
+model = load_model('models/vgg16_O_R_classifier.keras')
 
 def predict_fun(img_path):
     # Upload and process images
@@ -767,7 +767,7 @@ def predict_fun(img_path):
     
     # Class determination based on threshold 0.5
     if prediction[0][0] >= 0.5:
-        print("The predicted image is INORGANIC")
+        print("The predicted image is Organic")
         return 'Recyclable Waste'
     else:
         print("The predicted image is ORGANIC")
@@ -779,7 +779,7 @@ all_time = 0
 
 for i in range(6):
     # Create figure to display
-    img_path = '/kaggle/input/waste-classification-data/DATASET/TEST/O/O_' + str(12568+i) + '.jpg'
+    img_path = 'DATASET/TEST/O/O_' + str(12568+i) + '.jpg'
     start = time.time()
     prediction = predict_fun(img_path)
     end = time.time()
@@ -802,7 +802,7 @@ axes = axes.flatten()  # Convert to 1D for easier handling
 
 for i in range(6):
     # Create figure to display
-    img_path = '/kaggle/input/waste-classification-data/DATASET/TEST/R/R_' + str(10400+i) + '.jpg'
+    img_path = 'DATASET/TEST/R/R_' + str(10400+i) + '.jpg'
     start = time.time()
     prediction = predict_fun(img_path)
     end = time.time()
@@ -839,11 +839,11 @@ from tensorflow.keras.models import load_model
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # Load model
-model = load_model('/kaggle/input/mobilenet/tensorflow2/default/1/my_model_mobilenetv2.h5')
+model = load_model('models/my_model_mobilenetv2.h5')
 
 # test folders
-folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
-folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
+folder_O = 'DATASET/TEST/O'
+folder_R = 'DATASET/TEST/R'
 
 # load image
 def load_y_test(folder, label):
@@ -919,7 +919,7 @@ from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning) 
 
-model = load_model('/kaggle/input/mobilenet/tensorflow2/default/1/my_model_mobilenetv2.h5')
+model = load_model('models/resnet50_waste_classifier.h5')
 
 def predict_fun(img_path):
     # Upload and process images
@@ -933,10 +933,10 @@ def predict_fun(img_path):
     
     # Class determination based on threshold 0.5
     if prediction[0][0] >= 0.5:
-        print("The predicted image is INORGANIC")
+        print("The predicted image is Recycle")
         return 'Recyclable Waste'
     else:
-        print("The predicted image is ORGANIC")
+        print("The predicted image is Organic")
         return 'Organic Waste'
 fig, axes = plt.subplots(2, 3, figsize=(12, 8))
 axes = axes.flatten()  # Convert to 1D for easier handling
@@ -944,7 +944,7 @@ all_time = 0
 
 for i in range(6):
     # Create figure to display
-    img_path = '/kaggle/input/waste-classification-data/DATASET/TEST/O/O_' + str(12568+i) + '.jpg'
+    img_path = 'DATASET/TEST/O/O_' + str(12568+i) + '.jpg'
     start = time.time()
     prediction = predict_fun(img_path)
     end = time.time()
@@ -967,7 +967,7 @@ axes = axes.flatten()
 
 for i in range(6):
     # Create figure to display
-    img_path = '/kaggle/input/waste-classification-data/DATASET/TEST/R/R_' + str(10400+i) + '.jpg'
+    img_path = 'DATASET/TEST/R/R_' + str(10400+i) + '.jpg'
     start = time.time()
     prediction = predict_fun(img_path)
     end = time.time()
@@ -1005,11 +1005,11 @@ from tensorflow.keras.models import load_model
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # Load model
-model = load_model('/kaggle/input/resnet50/tensorflow2/default/1/my_model_resnet50.h5')
+model = load_model('models/resnet50_waste_classifier.h5')
 
 # test folder
-folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
-folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
+folder_O = 'DATASET/TEST/O'
+folder_R = 'DATASET/TEST/R'
 
 # load image
 def load_y_test(folder, label):
@@ -1083,7 +1083,7 @@ from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning) 
 
-model = load_model('/kaggle/input/resnet50/tensorflow2/default/1/my_model_resnet50.h5')
+model = load_model('models/resnet50_waste_classifier.h5')
 
 def predict_fun(img_path):
     # Upload and process images
@@ -1097,10 +1097,10 @@ def predict_fun(img_path):
     
     # Class determination based on threshold 0.5
     if prediction[0][0] >= 0.5:
-        print("The predicted image is INORGANIC")
+        print("The predicted image is Organic")
         return 'Recyclable Waste'
     else:
-        print("The predicted image is ORGANIC")
+        print("The predicted image is Recycle")
         return 'Organic Waste'
 fig, axes = plt.subplots(2, 3, figsize=(12, 8))
 axes = axes.flatten()  # Convert to 1D for easier handling
@@ -1108,7 +1108,7 @@ all_time = 0
 
 for i in range(6):
     # Create figure to display
-    img_path = '/kaggle/input/waste-classification-data/DATASET/TEST/O/O_' + str(12568+i) + '.jpg'
+    img_path = 'DATASET/TEST/O/O_' + str(12568+i) + '.jpg'
     start = time.time()
     prediction = predict_fun(img_path)
     end = time.time()
@@ -1129,7 +1129,7 @@ axes = axes.flatten()  # Convert to 1D for easier handling
 
 for i in range(6):
     # Create figure to display
-    img_path = '/kaggle/input/waste-classification-data/DATASET/TEST/R/R_' + str(10400+i) + '.jpg'
+    img_path = 'DATASET/TEST/R/R_' + str(10400+i) + '.jpg'
     start = time.time()
     prediction = predict_fun(img_path)
     end = time.time()
@@ -1166,10 +1166,10 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
-model = load_model('/kaggle/input/effectlite/tensorflow2/default/1/my_model_effectlite.h5')
+model = load_model('models/my_model_effectlite.h5')
 
-folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
-folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
+folder_O = 'DATASET/TEST/O'
+folder_R = 'DATASET/TEST/R'
 
 def load_y_test(folder, label):
     y_test = []
@@ -1242,7 +1242,7 @@ from tensorflow.keras.preprocessing.image import load_img, img_to_array
 
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning) 
-model = load_model('/kaggle/input/effectlite/tensorflow2/default/1/my_model_effectlite.h5')
+model = load_model('models/my_model_effectlite.h5')
 
 def predict_fun(img_path):
     # Upload and process images
@@ -1256,10 +1256,10 @@ def predict_fun(img_path):
     
     # Class determination based on threshold 0.5
     if prediction[0][0] >= 0.5:
-        print("The predicted image is INORGANIC")
+        print("The predicted image is Organic")
         return 'Recyclable Waste'
     else:
-        print("The predicted image is ORGANIC")
+        print("The predicted image is Recycle")
         return 'Organic Waste'
 
 fig, axes = plt.subplots(2, 3, figsize=(12, 8))
@@ -1268,7 +1268,7 @@ all_time = 0
 
 for i in range(6):
     # Create figure to display
-    img_path = '/kaggle/input/waste-classification-data/DATASET/TEST/O/O_' + str(12568+i) + '.jpg'
+    img_path = 'DATASET/TEST/O/O_' + str(12568+i) + '.jpg'
     start = time.time()
     prediction = predict_fun(img_path)
     end = time.time()
@@ -1291,7 +1291,7 @@ axes = axes.flatten()
 
 for i in range(6):
     # Create figure to display
-    img_path = '/kaggle/input/waste-classification-data/DATASET/TEST/R/R_' + str(10400+i) + '.jpg'
+    img_path = 'DATASET/TEST/R/R_' + str(10400+i) + '.jpg'
     start = time.time()
     prediction = predict_fun(img_path)
     end = time.time()
