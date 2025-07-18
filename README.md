@@ -284,7 +284,7 @@ report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/orginil_cnn_model.PNG?token=GHSAT0AAAAAADHBSA5WSPVNCSYUOODWB5CG2DZU4LA)
+![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/cnn_model.PNG?token=GHSAT0AAAAAADHBSA5XZYHWC2LLP7MVYBOQ2DZVKUQ)
 
 
 
