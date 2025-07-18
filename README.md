@@ -286,8 +286,6 @@ print(report)
 ```
 ![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/cnn_model.PNG?token=GHSAT0AAAAAADHBSA5XZYHWC2LLP7MVYBOQ2DZVKUQ)
 
-
-
 ## 1.4. Compare the sizes of CNN, pruned, quantized models.
 ```python
 import os
@@ -421,8 +419,8 @@ report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/compare%20cnn.PNG?token=GHSAT0AAAAAADHBSA5X6KDWZPPKPOP2USIK2DZU7TA)
 
+![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/compare%20cnn.PNG?token=GHSAT0AAAAAADHBSA5X6KDWZPPKPOP2USIK2DZU7TA)
 
 
 # 3. VGG16 
@@ -496,6 +494,7 @@ print('Classification Report:')
 print(report)
 ```
 ![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/vgg16.PNG?token=GHSAT0AAAAAADHBSA5WRTM7752KPXSHNYV42DZVAMQ)
+
 # 4. MobileNetV2
 ## 4.1. Evaluation of MobileNetV2 Model
 ```python
@@ -571,9 +570,7 @@ report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle
 print('Classification Report:')
 print(report)
 ```
-
 ![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/mobilenetv2.PNG?token=GHSAT0AAAAAADHBSA5XLCFWWOIN6D5LOWEE2DZVBBQ)
-
 
 # 4. ResNet
 ## 4.1. Evaluation of ResNet Model
@@ -649,7 +646,6 @@ print(report)
 ```
 ![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/resnet.PNG?token=GHSAT0AAAAAADHBSA5WAAKMMWHUTORWSJTM2DZVBWQ)
 
-
 # 5. EfficientNet
 ## 5.1 Evaluation of EfficientNet Model
 ```python
@@ -723,8 +719,6 @@ print(report)
 ```
 ![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/EfficientNet.PNG?token=GHSAT0AAAAAADHBSA5WVJGFUUVFD6QIHFJC2DZVCSQ)
 
-
-
 # 6. Evaluation of Models.
 ## 6.1 Confusion Matrix of Models
 ```python
@@ -779,6 +773,7 @@ plt.tight_layout()
 plt.savefig('bieu_do_confusion.png')  
 plt.show()
 ```
+
 ![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/bieu_do_confusion.png?token=GHSAT0AAAAAADHBSA5XW5WVG72V4HRUBRAA2DZVECA)
 
 ## 6.2. Comparison of Models
@@ -830,6 +825,7 @@ ket_qua = tinh_mdr_fdr(cmats)
 for res in ket_qua:
     print(f"Model {res['model_index']}: MDR = {res['MDR']:.4f}, FDR = {res['FDR']:.4f}")
 ```
+
 ![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/evaluation2.PNG?token=GHSAT0AAAAAADHBSA5XL6QWC7TSUKXZFBKQ2DZVETQ)
 
 ```python
@@ -922,6 +918,7 @@ plt.savefig('bieu_do_mo_hinh.png')
 plt.show()
 ```
 ![alt text](https://i.ibb.co/0ypQqYt4/bieu-do-mo-hinh-6.png)
+
 ```python
 import pandas as pd
 
@@ -1050,6 +1047,7 @@ print(df_table1)
 print("\nTable 2 (Max size, Min accuracy, Max speed_ras, speed_kaggle, MDR, FDR")
 print(df_table2)
 ```
+
 ![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/table.PNG?token=GHSAT0AAAAAADHBSA5XJ2VGOXJKYVL3C2KG2DZVFVA)
 
 ## License
