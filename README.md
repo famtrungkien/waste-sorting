@@ -787,7 +787,7 @@ plt.savefig('bieu_do_confusion.png')
 plt.show()
 ```
 
-![alt text]([https://i.postimg.cc/CMQQ7fZ4/bieu-do-confusion.png](https://github.com/famtrungkien/waste-sorting/blob/main/images/results/bieu_do_confusion.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/results/bieu_do_confusion.png)
 
 ## 6.2. Comparison of Models
 ```python
