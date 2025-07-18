@@ -174,7 +174,7 @@ print('Classification Report:')
 print(report)
 ```
 
-![alt text](https://i.postimg.cc/k4hfTk55/orginil-cnn-model.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/orginil_cnn_model.PNG)
 
 
 ## 1.2. Evaluation of PQ-CNN model
