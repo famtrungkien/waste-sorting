@@ -58,8 +58,8 @@ def load_data(path):
     data = pd.DataFrame({'image' : x_data, 'label' : y_data})
     return data
 
-train_path = "/kaggle/input/waste-classification-data/DATASET/TRAIN/"
-test_path = "/kaggle/input/waste-classification-data/DATASET/TEST/"
+train_path = "DATASET/TRAIN/"
+test_path = "DATASET/TEST/"
 
 # Load train data
 train_data = load_data(train_path)
@@ -599,11 +599,11 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from tensorflow.keras.preprocessing.image import ImageDataGenerator, load_img, img_to_array
 
 # Load model
-model = load_model('/kaggle/input/model_resnet50/tensorflow2/default/1/resnet50_waste_classifier.h5')
+model = load_model('models/resnet50_waste_classifier.h5')
 
 # test folders
-folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
-folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
+folder_O = 'DATASET/TEST/O'
+folder_R = 'DATASET/TEST/R'
 
 # load image
 def load_y_test(folder, label):
@@ -672,10 +672,10 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
-model = load_model('/kaggle/input/model_effectlite/tensorflow2/default/1/my_model_effectlite.h5')
+model = load_model('models/my_model_effectlite.h5')
 
-folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
-folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
+folder_O = 'DATASET/TEST/O'
+folder_R = 'DATASET/TEST/R'
 
 def load_y_test(folder, label):
     y_test = []
