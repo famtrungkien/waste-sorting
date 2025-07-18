@@ -21,17 +21,17 @@ import warnings
 import os
 warnings.filterwarnings('ignore')
 
-train_path0 = "DATASET/TRAIN/O"
-train_path1 = "DATASET/TRAIN/R"
+train_path0 = "/kaggle/input/waste-classification-data/DATASET/TRAIN/O"
+train_path1 = "/kaggle/input/waste-classification-data/DATASET/TRAIN/R"
 
-test_path0 = "DATASET/TEST/O"
-test_path1 = "DATASET/TEST/R"
+test_path0 = "/kaggle/input/waste-classification-data/DATASET/TEST/O"
+test_path1 = "/kaggle/input/waste-classification-data/DATASET/TEST/R"
 
 import fnmatch
 
 print(len(fnmatch.filter(os.listdir(train_path0), '*.jpg')) +  len(fnmatch.filter(os.listdir(train_path1), '*.jpg')))
-
 print(len(fnmatch.filter(os.listdir(test_path0), '*.jpg')) +  len(fnmatch.filter(os.listdir(test_path1), '*.jpg')))
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -39,6 +39,7 @@ import cv2
 from tqdm import tqdm
 import warnings
 warnings.filterwarnings('ignore')
+
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Activation, Dropout, Flatten, Dense , BatchNormalization
 from tensorflow.keras.preprocessing.image import ImageDataGenerator, img_to_array, load_img
@@ -57,14 +58,16 @@ def load_data(path):
     data = pd.DataFrame({'image' : x_data, 'label' : y_data})
     return data
 
-train_path = "DATASET/TRAIN/"
-test_path = "DATASET/TEST/"
+train_path = "/kaggle/input/waste-classification-data/DATASET/TRAIN/"
+test_path = "/kaggle/input/waste-classification-data/DATASET/TEST/"
 
 # Load train data
 train_data = load_data(train_path)
 # Load test data
 test_data = load_data(test_path)
+
 plt.figure(figsize=(12, 6))
+
 plt.subplot(1, 2, 1)
 colors = ['green', 'red']
 plt.pie(train_data['label'].value_counts(), 
@@ -88,7 +91,10 @@ plt.rcParams.update({'font.size': 24})
 plt.tight_layout()
 plt.show()
 ```
-![alt text](https://i.ibb.co/4wJ56yTR/dataset.png)
+
+![alt text](https://i.postimg.cc/fbqrP32Z/dataset.png)
+
+
 # 1. CNN Model
 ## 1.1 Evaluation of CNN Model
 
@@ -106,11 +112,11 @@ from tensorflow.keras.models import load_model
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # Load model
-model = load_model('models/my_cnn_model.h5')
+model = load_model('/kaggle/input/model_cnn/tensorflow2/default/1/my_cnn_model.h5')
 
 # Test path folders
-folder_O = 'DATASET/TEST/O'
-folder_R = 'DATASET/TEST/R'
+folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
+folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
 
 # load image 
 def load_y_test(folder, label):
@@ -130,13 +136,15 @@ def predict_fun(img):
     image_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     # Resize to (224x224)
     resized_img = cv2.resize(image_rgb, (224, 224))
-    # Convert to float32
-    resized_img = resized_img.astype('float32') / 255.0  
+    # onvert to float32
+    resized_img = resized_img.astype('float32') / 255.0  # Mô hình được huấn luyện với dữ liệu chuẩn hóa 0-1
     # add batch dimension
     input_img = np.expand_dims(resized_img, axis=0)
     # predict
     prediction = model.predict(input_img, verbose=None)
     result = np.argmax(prediction)
+
+    
     if result == 0:
         #print('The image is Organic Waste')
         return 0
@@ -163,7 +171,8 @@ report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://i.ibb.co/cKXsy8G4/cnn-model.png)
+
+![alt text](https://i.postimg.cc/k4hfTk55/orginil-cnn-model.png)
 
 
 ## 1.2. Evaluation of PQ-CNN model
@@ -284,7 +293,7 @@ report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/cnn_model.PNG?token=GHSAT0AAAAAADHBSA5XZYHWC2LLP7MVYBOQ2DZVKUQ)
+![alt text](https://i.postimg.cc/FHjChWTP/cnn-model.png)
 
 ## 1.4. Compare the sizes of CNN, pruned, quantized models.
 ```python
@@ -302,7 +311,7 @@ print(f"Size of Quantized CNN model: {getsize(path_quantized_cnn)/1000000}MB")
 
 print(f"Quantized CNN model reduce: {getsize(path_cnn)/getsize(path_quantized_cnn)} times")
 ```
-![alt text](https://i.ibb.co/PZM8Yb2k/size-compare.png)
+![alt text](https://i.postimg.cc/GhTS5hGn/compare-cnn.png)
 
 # 2. ConvNext Model
 
@@ -327,15 +336,15 @@ from pathlib import Path
 from torch.utils.data import DataLoader
 import torch.nn.functional as F
 
-# Đặt device
+# set device
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model_path = '/kaggle/input/model_convnext/tensorflow2/default/1/convnext_rac_model.pth'
 
-# Đường dẫn dữ liệu
+# Path of dataset
 train_dir = "/kaggle/input/waste-classification-data/DATASET/TRAIN/"
 test_dir = "/kaggle/input/waste-classification-data/DATASET/TEST/"
 
-# Transform dữ liệu
+# Transform dataset
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
@@ -343,22 +352,22 @@ transform = transforms.Compose([
                          std=[0.229, 0.224, 0.225])
 ])
 
-# Tạo dataset
+# Create dataset
 train_dataset = datasets.ImageFolder(train_dir, transform=transform)
 test_dataset = datasets.ImageFolder(test_dir, transform=transform)
 
-# Thư mục chứa dữ liệu test
+# Testing dataset
 folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
 folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
 
-# Tải mô hình đã lưu
+# Load saved model
 model = models.convnext_tiny(pretrained=False)
 model.classifier[2] = nn.Linear(model.classifier[2].in_features, 2)
 model.load_state_dict(torch.load(model_path))
 model = model.to(device)
 model.eval()
 
-# Hàm dự đoán
+# Predict function
 def predict_image(image_path, model):
     image = transforms.Compose([
         transforms.Resize((224, 224)),
@@ -376,7 +385,7 @@ def predict_image(image_path, model):
         confidence = probs[0][pred_class].item()
     #return class_name, confidence
 
-# Lớp 0 là hữu cơ, lớp 1 là vô cơ
+# Class 0 is organic, class 1 is inorganic
     if class_name == 'O':
         #print('The image is Organic Waste')
         return 0
@@ -386,7 +395,7 @@ def predict_image(image_path, model):
     
 from PIL import Image
 
-# Hàm load ảnh và tiền xử lý
+# Image loading and preprocessing function
 def load_y_test(folder, label):
     y_test = []
     y_pred = []
@@ -409,18 +418,17 @@ y_pred = np.array(y_pred_0 + y_pred_1)
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy: {accuracy:.2f}')
 
-# Bảng phân biệt nhầm lẫn
+# Confusion matrix
 cm = confusion_matrix(y_test, y_pred)
 print('Confusion Matrix:')
 print(cm)
 
-# Báo cáo phân loại
+# Classification report
 report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle'])
 print('Classification Report:')
 print(report)
 ```
-
-![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/compare%20cnn.PNG?token=GHSAT0AAAAAADHBSA5X6KDWZPPKPOP2USIK2DZU7TA)
+![alt text](https://i.postimg.cc/Zq47n8gJ/convnext.png)
 
 
 # 3. VGG16 
@@ -442,11 +450,11 @@ from tensorflow.keras.preprocessing.image import load_img, img_to_array
 # Load model
 model = load_model('/kaggle/input/model_vgg16/tensorflow2/default/1/vgg16_O_R_classifier.keras')
 
-# Thư mục chứa dữ liệu test
+# Test data directory
 folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
 folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
 
-# Hàm image
+# Image function
 def load_y_test(folder, label):
     y_test = []
     y_pred = []
@@ -493,7 +501,8 @@ report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/vgg16.PNG?token=GHSAT0AAAAAADHBSA5WRTM7752KPXSHNYV42DZVAMQ)
+
+![alt text](https://i.postimg.cc/Hst7HbQw/vgg16.png)
 
 # 4. MobileNetV2
 ## 4.1. Evaluation of MobileNetV2 Model
@@ -570,7 +579,8 @@ report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/mobilenetv2.PNG?token=GHSAT0AAAAAADHBSA5XLCFWWOIN6D5LOWEE2DZVBBQ)
+
+![alt text](https://i.postimg.cc/1tzvc9sT/mobilenetv2.png)
 
 # 4. ResNet
 ## 4.1. Evaluation of ResNet Model
@@ -639,12 +649,13 @@ print(f'Accuracy: {accuracy:.2f}')
 cm = confusion_matrix(y_test, y_pred)
 print('Confusion Matrix:')
 print(cm)
+
 # report
 report = classification_report(y_test, y_pred, target_names=['Organic', 'Recyle'])
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/resnet.PNG?token=GHSAT0AAAAAADHBSA5WAAKMMWHUTORWSJTM2DZVBWQ)
+![alt text](https://i.postimg.cc/C5BJXmZs/resnet.png)
 
 # 5. EfficientNet
 ## 5.1 Evaluation of EfficientNet Model
@@ -717,7 +728,7 @@ report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/EfficientNet.PNG?token=GHSAT0AAAAAADHBSA5WVJGFUUVFD6QIHFJC2DZVCSQ)
+![alt text](https://i.postimg.cc/xd5szkDM/Efficient-Net.png)
 
 # 6. Evaluation of Models.
 ## 6.1 Confusion Matrix of Models
@@ -774,7 +785,7 @@ plt.savefig('bieu_do_confusion.png')
 plt.show()
 ```
 
-![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/bieu_do_confusion.png?token=GHSAT0AAAAAADHBSA5XW5WVG72V4HRUBRAA2DZVECA)
+![alt text](https://i.postimg.cc/CMQQ7fZ4/bieu-do-confusion.png)
 
 ## 6.2. Comparison of Models
 ```python
@@ -825,8 +836,7 @@ ket_qua = tinh_mdr_fdr(cmats)
 for res in ket_qua:
     print(f"Model {res['model_index']}: MDR = {res['MDR']:.4f}, FDR = {res['FDR']:.4f}")
 ```
-
-![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/evaluation2.PNG?token=GHSAT0AAAAAADHBSA5XL6QWC7TSUKXZFBKQ2DZVETQ)
+![alt text](https://i.postimg.cc/FKfnSrpK/evaluation2.png)
 
 ```python
 import pandas as pd
@@ -917,7 +927,7 @@ plt.savefig('bieu_do_mo_hinh.png')
 # show image plot
 plt.show()
 ```
-![alt text](https://i.ibb.co/0ypQqYt4/bieu-do-mo-hinh-6.png)
+![alt text](https://i.postimg.cc/6qkzXnnJ/bieu-do-mo-hinh.png)
 
 ```python
 import pandas as pd
@@ -1047,8 +1057,7 @@ print(df_table1)
 print("\nTable 2 (Max size, Min accuracy, Max speed_ras, speed_kaggle, MDR, FDR")
 print(df_table2)
 ```
-
-![alt text](https://raw.githubusercontent.com/famtrungkien/waste-sorting/refs/heads/main/images/table.PNG?token=GHSAT0AAAAAADHBSA5XJ2VGOXJKYVL3C2KG2DZVFVA)
+![alt text](https://i.postimg.cc/jdHWsyrx/table.png)
 
 ## License
 
