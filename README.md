@@ -9,6 +9,8 @@ In this notebook we will deal with a dataset containing 25,000 images of waste. 
 * EfficientNet
 * MobileNet
 
+Kaggle notebook is available [here](https://pip.pypa.io/en/stable/) 
+
 ## Image Visualization & Processing¶
 
 ```bash
