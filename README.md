@@ -21,11 +21,11 @@ import warnings
 import os
 warnings.filterwarnings('ignore')
 
-train_path0 = "/kaggle/input/waste-classification-data/DATASET/TRAIN/O"
-train_path1 = "/kaggle/input/waste-classification-data/DATASET/TRAIN/R"
+train_path0 = "DATASET/TRAIN/O"
+train_path1 = "DATASET/TRAIN/R"
 
-test_path0 = "/kaggle/input/waste-classification-data/DATASET/TEST/O"
-test_path1 = "/kaggle/input/waste-classification-data/DATASET/TEST/R"
+test_path0 = "DATASET/TEST/O"
+test_path1 = "DATASET/TEST/R"
 
 import fnmatch
 
@@ -112,11 +112,11 @@ from tensorflow.keras.models import load_model
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # Load model
-model = load_model('/kaggle/input/model_cnn/tensorflow2/default/1/my_cnn_model.h5')
+model = load_model('models/my_cnn_model.h5')
 
 # Test path folders
-folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
-folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
+folder_O = 'DATASET/TEST/O'
+folder_R = 'DATASET/TEST/R'
 
 # load image 
 def load_y_test(folder, label):
@@ -338,11 +338,11 @@ import torch.nn.functional as F
 
 # set device
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model_path = '/kaggle/input/model_convnext/tensorflow2/default/1/convnext_rac_model.pth'
+model_path = 'models/convnext_rac_model.pth'
 
 # Path of dataset
-train_dir = "/kaggle/input/waste-classification-data/DATASET/TRAIN/"
-test_dir = "/kaggle/input/waste-classification-data/DATASET/TEST/"
+train_dir = "DATASET/TRAIN/"
+test_dir = "DATASET/TEST/"
 
 # Transform dataset
 transform = transforms.Compose([
@@ -357,8 +357,8 @@ train_dataset = datasets.ImageFolder(train_dir, transform=transform)
 test_dataset = datasets.ImageFolder(test_dir, transform=transform)
 
 # Testing dataset
-folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
-folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
+folder_O = 'DATASET/TEST/O'
+folder_R = 'DATASET/TEST/R'
 
 # Load saved model
 model = models.convnext_tiny(pretrained=False)
@@ -448,11 +448,11 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 
 # Load model
-model = load_model('/kaggle/input/model_vgg16/tensorflow2/default/1/vgg16_O_R_classifier.keras')
+model = load_model('models/vgg16_O_R_classifier.keras')
 
 # Test data directory
-folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
-folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
+folder_O = 'DATASET/TEST/O'
+folder_R = 'DATASET/TEST/R'
 
 # Image function
 def load_y_test(folder, label):
@@ -520,11 +520,11 @@ from tensorflow.keras.models import load_model
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # Load model
-model = load_model('/kaggle/input/model_mobilenetv2/tensorflow2/default/1/my_model_mobilenetv2.h5')
+model = load_model('models/my_model_mobilenetv2.h5')
 
 # test folders
-folder_O = '/kaggle/input/waste-classification-data/DATASET/TEST/O'
-folder_R = '/kaggle/input/waste-classification-data/DATASET/TEST/R'
+folder_O = 'DATASET/TEST/O'
+folder_R = 'DATASET/TEST/R'
 
 # load image
 def load_y_test(folder, label):
