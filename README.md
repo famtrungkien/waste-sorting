@@ -622,7 +622,7 @@ def load_y_test(folder, label):
 
 class_indices = {'organic': 0, 'recyle': 1} 
 
-# Hàm dự đoán từ một ảnh
+# predict function from an image
 def predict_fun(image_path):
     img = load_img(image_path, target_size=(224, 224))
     img_array = img_to_array(img) / 255.0
@@ -787,7 +787,7 @@ plt.savefig('bieu_do_confusion.png')
 plt.show()
 ```
 
-![alt text]([https://i.postimg.cc/CMQQ7fZ4/bieu-do-confusion.png](https://github.com/famtrungkien/waste-sorting/blob/main/images/results/bieu_do_confusion.png))
+![alt text]([https://i.postimg.cc/CMQQ7fZ4/bieu-do-confusion.png](https://github.com/famtrungkien/waste-sorting/blob/main/images/results/bieu_do_confusion.png)
 
 ## 6.2. Comparison of Models
 ```python
