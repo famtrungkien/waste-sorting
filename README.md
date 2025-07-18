@@ -295,7 +295,7 @@ report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://i.postimg.cc/FHjChWTP/cnn-model.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/cnn_model.PNG)
 
 ## 1.4. Compare the sizes of CNN, pruned, quantized models.
 ```python
@@ -313,7 +313,7 @@ print(f"Size of Quantized CNN model: {getsize(path_quantized_cnn)/1000000}MB")
 
 print(f"Quantized CNN model reduce: {getsize(path_cnn)/getsize(path_quantized_cnn)} times")
 ```
-![alt text](https://i.postimg.cc/GhTS5hGn/compare-cnn.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/compare%20cnn.PNG)
 
 # 2. ConvNext Model
 
@@ -430,7 +430,7 @@ report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://i.postimg.cc/Zq47n8gJ/convnext.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/convnext.PNG)
 
 
 # 3. VGG16 
@@ -504,7 +504,7 @@ print('Classification Report:')
 print(report)
 ```
 
-![alt text](https://i.postimg.cc/Hst7HbQw/vgg16.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/vgg16.PNG)
 
 # 4. MobileNetV2
 ## 4.1. Evaluation of MobileNetV2 Model
@@ -582,7 +582,7 @@ print('Classification Report:')
 print(report)
 ```
 
-![alt text](https://i.postimg.cc/1tzvc9sT/mobilenetv2.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/mobilenetv2.PNG)
 
 # 4. ResNet
 ## 4.1. Evaluation of ResNet Model
@@ -657,7 +657,7 @@ report = classification_report(y_test, y_pred, target_names=['Organic', 'Recyle'
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://i.postimg.cc/C5BJXmZs/resnet.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/resnet.PNG)
 
 # 5. EfficientNet
 ## 5.1 Evaluation of EfficientNet Model
@@ -730,7 +730,7 @@ report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://i.postimg.cc/xd5szkDM/Efficient-Net.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/EfficientNet.PNG)
 
 # 6. Evaluation of Models.
 ## 6.1 Confusion Matrix of Models
@@ -787,7 +787,7 @@ plt.savefig('bieu_do_confusion.png')
 plt.show()
 ```
 
-![alt text](https://i.postimg.cc/CMQQ7fZ4/bieu-do-confusion.png)
+![alt text]([https://i.postimg.cc/CMQQ7fZ4/bieu-do-confusion.png](https://github.com/famtrungkien/waste-sorting/blob/main/images/results/bieu_do_confusion.png))
 
 ## 6.2. Comparison of Models
 ```python
@@ -838,7 +838,7 @@ ket_qua = tinh_mdr_fdr(cmats)
 for res in ket_qua:
     print(f"Model {res['model_index']}: MDR = {res['MDR']:.4f}, FDR = {res['FDR']:.4f}")
 ```
-![alt text](https://i.postimg.cc/FKfnSrpK/evaluation2.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/evaluation2.PNG)
 
 ```python
 import pandas as pd
@@ -929,7 +929,7 @@ plt.savefig('bieu_do_mo_hinh.png')
 # show image plot
 plt.show()
 ```
-![alt text](https://i.postimg.cc/6qkzXnnJ/bieu-do-mo-hinh.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/results/bieu_do_mo_hinh.png)
 
 ```python
 import pandas as pd
@@ -1059,7 +1059,7 @@ print(df_table1)
 print("\nTable 2 (Max size, Min accuracy, Max speed_ras, speed_kaggle, MDR, FDR")
 print(df_table2)
 ```
-![alt text](https://i.postimg.cc/jdHWsyrx/table.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/results/table.PNG)
 
 ## License
 
