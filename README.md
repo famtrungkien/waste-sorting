@@ -9,6 +9,8 @@ In this notebook we will deal with a dataset containing 25,000 images of waste. 
 * EfficientNet
 * MobileNet
 
+Kaggle notebook is available [here](https://www.kaggle.com/code/phamkien999/evaluation-of-models/) 
+
 ## Image Visualization & Processing¶
 
 ```bash
