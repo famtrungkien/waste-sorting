@@ -8,8 +8,13 @@ from PIL import Image
 import cv2
 import matplotlib.pyplot as plt
 import time
+from pathlib import Path
+current_dir = str(Path(__file__).parent)
 
-model_path = 'models/model_quantized.tflite'
+
+
+
+model_path = current_dir + 'models/model_quantized.tflite'
 # Load model TFLite
 def load_tflite_model(model_path):
     interpreter = tf.lite.Interpreter(model_path=model_path)
@@ -71,7 +76,7 @@ axes = axes.flatten()
 all_time = 0
 for i in range(6):
     # Create figure to display
-    img_path = 'DATASET/TEST/O/O_' + str(12568+i) + '.jpg'
+    img_path = current_dir +  'DATASET/TEST/O/O_' + str(12568+i) + '.jpg'
     start = time.time()
     prediction = predict_fun(img_path)
     end = time.time()
@@ -92,7 +97,7 @@ axes = axes.flatten()
 
 for i in range(6):
     # Tạo figure để hiển thị
-    img_path = 'DATASET/TEST/R/R_' + str(10000+i) + '.jpg'
+    img_path = current_dir +  'DATASET/TEST/R/R_' + str(10000+i) + '.jpg'
     start = time.time()
     prediction = predict_fun(img_path)
     end = time.time()

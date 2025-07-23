@@ -9,13 +9,17 @@ import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from pathlib import Path
+current_dir = str(Path(__file__).parent)
+
+
 
 # Load model
-model = load_model('models/my_cnn_model.h5')
+model = load_model(current_dir + 'models/my_cnn_model.h5')
 
 # Test path folders
-folder_O = 'DATASET/TEST/O'
-folder_R = 'DATASET/TEST/R'
+folder_O = current_dir +'DATASET/TEST/O'
+folder_R = current_dir +'DATASET/TEST/R'
 
 # load image 
 def load_y_test(folder, label):

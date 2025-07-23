@@ -17,13 +17,18 @@ from pathlib import Path
 from torch.utils.data import DataLoader
 import torch.nn.functional as F
 
+from pathlib import Path
+current_dir = str(Path(__file__).parent)
+
+
+
 # Set device
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model_path = 'models/convnext_rac_model.pth'
+model_path = current_dir + 'models/convnext_rac_model.pth'
 
 # dataset path
-train_dir = "DATASET/TRAIN/"
-test_dir = "DATASET/TEST/"
+train_dir = current_dir + "DATASET/TRAIN/"
+test_dir = current_dir + "DATASET/TEST/"
 
 # Transform dataset
 transform = transforms.Compose([
@@ -38,8 +43,8 @@ train_dataset = datasets.ImageFolder(train_dir, transform=transform)
 test_dataset = datasets.ImageFolder(test_dir, transform=transform)
 
 # Test data directory
-folder_O = 'DATASET/TEST/O'
-folder_R = 'DATASET/TEST/R'
+folder_O = current_dir + 'DATASET/TEST/O'
+folder_R = current_dir + 'DATASET/TEST/R'
 
 # Load saved model
 model = models.convnext_tiny(pretrained=False)
