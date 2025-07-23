@@ -174,7 +174,7 @@ print('Classification Report:')
 print(report)
 ```
 
-![alt text](https://i.postimg.cc/k4hfTk55/orginil-cnn-model.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/orginil_cnn_model.PNG)
 
 
 ## 1.2. Evaluation of PQ-CNN model
@@ -295,7 +295,7 @@ report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://i.postimg.cc/FHjChWTP/cnn-model.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/cnn_model.PNG)
 
 ## 1.4. Compare the sizes of CNN, pruned, quantized models.
 ```python
@@ -313,7 +313,7 @@ print(f"Size of Quantized CNN model: {getsize(path_quantized_cnn)/1000000}MB")
 
 print(f"Quantized CNN model reduce: {getsize(path_cnn)/getsize(path_quantized_cnn)} times")
 ```
-![alt text](https://i.postimg.cc/GhTS5hGn/compare-cnn.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/compare%20cnn.PNG)
 
 # 2. ConvNext Model
 
@@ -430,7 +430,7 @@ report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://i.postimg.cc/Zq47n8gJ/convnext.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/convnext.PNG)
 
 
 # 3. VGG16 
@@ -504,7 +504,7 @@ print('Classification Report:')
 print(report)
 ```
 
-![alt text](https://i.postimg.cc/Hst7HbQw/vgg16.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/vgg16.PNG)
 
 # 4. MobileNetV2
 ## 4.1. Evaluation of MobileNetV2 Model
@@ -582,7 +582,7 @@ print('Classification Report:')
 print(report)
 ```
 
-![alt text](https://i.postimg.cc/1tzvc9sT/mobilenetv2.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/mobilenetv2.PNG)
 
 # 4. ResNet
 ## 4.1. Evaluation of ResNet Model
@@ -622,7 +622,7 @@ def load_y_test(folder, label):
 
 class_indices = {'organic': 0, 'recyle': 1} 
 
-# Hàm dự đoán từ một ảnh
+# predict function from an image
 def predict_fun(image_path):
     img = load_img(image_path, target_size=(224, 224))
     img_array = img_to_array(img) / 255.0
@@ -657,7 +657,7 @@ report = classification_report(y_test, y_pred, target_names=['Organic', 'Recyle'
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://i.postimg.cc/C5BJXmZs/resnet.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/resnet.PNG)
 
 # 5. EfficientNet
 ## 5.1 Evaluation of EfficientNet Model
@@ -730,7 +730,7 @@ report = classification_report(y_test, y_pred, target_names=['Organic', 'Recycle
 print('Classification Report:')
 print(report)
 ```
-![alt text](https://i.postimg.cc/xd5szkDM/Efficient-Net.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/EfficientNet.PNG)
 
 # 6. Evaluation of Models.
 ## 6.1 Confusion Matrix of Models
@@ -787,13 +787,13 @@ plt.savefig('bieu_do_confusion.png')
 plt.show()
 ```
 
-![alt text](https://i.postimg.cc/CMQQ7fZ4/bieu-do-confusion.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/results/bieu_do_confusion.png)
 
 ## 6.2. Comparison of Models
 ```python
 import numpy as np
 
-# Define the confusion matrices
+# confusion matrix
 cmats = [
     np.array([[1340, 61], 
               [141, 971]]),   # CNN
@@ -808,37 +808,28 @@ cmats = [
     np.array([[1362, 39],
               [187, 925]]) #EffectLiteNet
 ]
+results = []
+# calculate MDR, FDR
+for idx, cm in enumerate(cmats):
+    TP = cm[1, 1]
+    FN = cm[1, 0]
+    FP = cm[0, 1]
 
-def tinh_mdr_fdr(cmats):
-    results = []
-    for idx, cm in enumerate(cmats):
-        total = np.sum(cm)
-        sai = np.sum(cm) - np.trace(cm)
-        false_positive = cm[0,1]  # Dự đoán sai là false positive
-        total_sai = sai
-        total_fp = false_positive
-
-        # Tính MDR
-        mdr = sai / total if total > 0 else 0
-
-        # Tính FDR
-        fdr = false_positive / sai if sai > 0 else 0
-
-        results.append({
+    
+    
+    MDR = FN / (TP + FN) if (TP + FN) != 0 else 0
+    FDR = FP / (TP + FP) if (TP + FP) != 0 else 0
+    
+    results.append({
             'model_index': idx + 1,
-            'MDR': mdr,
-            'FDR': fdr
+            'MDR': MDR,
+            'FDR': FDR
         })
-    return results
 
-# calculate MDR and FDR 
-ket_qua = tinh_mdr_fdr(cmats)
-
-# print results
-for res in ket_qua:
+for res in results:
     print(f"Model {res['model_index']}: MDR = {res['MDR']:.4f}, FDR = {res['FDR']:.4f}")
 ```
-![alt text](https://i.postimg.cc/FKfnSrpK/evaluation2.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/evaluation2.PNG)
 
 ```python
 import pandas as pd
@@ -847,13 +838,13 @@ import matplotlib.pyplot as plt
 # dataset of models
 models = [
     {
-        'name': 'PQ-CNN',
+        'name': 'PrQ-CNN',
         'size': 22.28,
         'accuracy': 92.0,
         'speed_ras': 76.3,
         'speed_kaggle': 54.0,
-        'MDR': 0.0804,
-        'FDR': 0.3020
+        'MDR': 0.1268,
+        'FDR': 0.0591
     },
     {
         'name': 'ConvNeXt',
@@ -861,8 +852,8 @@ models = [
         'accuracy': 98.0,
         'speed_ras': 234.3,
         'speed_kaggle': 71.6,
-        'MDR': 0.0235,
-        'FDR': 0.2712
+        'MDR': 0.0387,
+        'FDR': 0.0147
     },
     {
         'name': 'VGG16',
@@ -870,8 +861,8 @@ models = [
         'accuracy': 89.0,
         'speed_ras': 472.2,
         'speed_kaggle': 90.4,
-        'MDR': 0.1094,
-        'FDR': 0.2109
+        'MDR': 0.1951,
+        'FDR': 0.0609
     },
     {
         'name': 'MobileNetV2',
@@ -879,8 +870,8 @@ models = [
         'accuracy': 88.0,
         'speed_ras': 130.4,
         'speed_kaggle': 78.5,
-        'MDR': 0.1150,
-        'FDR': 0.1453
+        'MDR': 0.2221,
+        'FDR': 0.0463
     },
     {
         'name': 'ResNet',
@@ -888,8 +879,8 @@ models = [
         'accuracy': 91.0,
         'speed_ras': 133.4,
         'speed_kaggle': 72.9,
-        'MDR': 0.0887,
-        'FDR': 0.1480
+        'MDR': 0.1709,
+        'FDR': 0.0346
     },
     {
         'name': 'EfficientNet',
@@ -897,10 +888,11 @@ models = [
         'accuracy': 91.0,
         'speed_ras': 250.0,
         'speed_kaggle': 91.0,
-        'MDR': 0.0899,
-        'FDR': 0.1726
+        'MDR': 0.1682,
+        'FDR': 0.0405
     }
 ]
+
 
 # create DataFrame
 df = pd.DataFrame(models)
@@ -929,7 +921,7 @@ plt.savefig('bieu_do_mo_hinh.png')
 # show image plot
 plt.show()
 ```
-![alt text](https://i.postimg.cc/6qkzXnnJ/bieu-do-mo-hinh.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/results/bieu_do_mo_hinh.png)
 
 ```python
 import pandas as pd
@@ -937,13 +929,13 @@ import pandas as pd
 # dataset of models
 models = [
     {
-        'name': 'PQ-CNN',
+        'name': 'PrQ-CNN',
         'size': 22.28,
         'accuracy': 92.0,
         'speed_ras': 76.3,
         'speed_kaggle': 54.0,
-        'MDR': 0.0804,
-        'FDR': 0.3020
+        'MDR': 0.1268,
+        'FDR': 0.0591
     },
     {
         'name': 'ConvNeXt',
@@ -951,8 +943,8 @@ models = [
         'accuracy': 98.0,
         'speed_ras': 234.3,
         'speed_kaggle': 71.6,
-        'MDR': 0.0235,
-        'FDR': 0.2712
+        'MDR': 0.0387,
+        'FDR': 0.0147
     },
     {
         'name': 'VGG16',
@@ -960,8 +952,8 @@ models = [
         'accuracy': 89.0,
         'speed_ras': 472.2,
         'speed_kaggle': 90.4,
-        'MDR': 0.1094,
-        'FDR': 0.2109
+        'MDR': 0.1951,
+        'FDR': 0.0609
     },
     {
         'name': 'MobileNetV2',
@@ -969,8 +961,8 @@ models = [
         'accuracy': 88.0,
         'speed_ras': 130.4,
         'speed_kaggle': 78.5,
-        'MDR': 0.1150,
-        'FDR': 0.1453
+        'MDR': 0.2221,
+        'FDR': 0.0463
     },
     {
         'name': 'ResNet',
@@ -978,8 +970,8 @@ models = [
         'accuracy': 91.0,
         'speed_ras': 133.4,
         'speed_kaggle': 72.9,
-        'MDR': 0.0887,
-        'FDR': 0.1480
+        'MDR': 0.1709,
+        'FDR': 0.0346
     },
     {
         'name': 'EfficientNet',
@@ -987,11 +979,10 @@ models = [
         'accuracy': 91.0,
         'speed_ras': 250.0,
         'speed_kaggle': 91.0,
-        'MDR': 0.0899,
-        'FDR': 0.1726
+        'MDR': 0.1682,
+        'FDR': 0.0405
     }
 ]
-
 
 # convert to DataFrame
 df = pd.DataFrame(models)
@@ -1059,7 +1050,7 @@ print(df_table1)
 print("\nTable 2 (Max size, Min accuracy, Max speed_ras, speed_kaggle, MDR, FDR")
 print(df_table2)
 ```
-![alt text](https://i.postimg.cc/jdHWsyrx/table.png)
+![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/results/table.PNG)
 
 ## License
 
