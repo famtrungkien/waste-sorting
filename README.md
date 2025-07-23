@@ -793,7 +793,7 @@ plt.show()
 ```python
 import numpy as np
 
-# Define the confusion matrices
+# confusion matrix
 cmats = [
     np.array([[1340, 61], 
               [141, 971]]),   # CNN
@@ -808,34 +808,25 @@ cmats = [
     np.array([[1362, 39],
               [187, 925]]) #EffectLiteNet
 ]
+results = []
+# calculate MDR, FDR
+for idx, cm in enumerate(cmats):
+    TP = cm[1, 1]
+    FN = cm[1, 0]
+    FP = cm[0, 1]
 
-def tinh_mdr_fdr(cmats):
-    results = []
-    for idx, cm in enumerate(cmats):
-        total = np.sum(cm)
-        sai = np.sum(cm) - np.trace(cm)
-        false_positive = cm[0,1]  # Dự đoán sai là false positive
-        total_sai = sai
-        total_fp = false_positive
-
-        # Tính MDR
-        mdr = sai / total if total > 0 else 0
-
-        # Tính FDR
-        fdr = false_positive / sai if sai > 0 else 0
-
-        results.append({
+    
+    
+    MDR = FN / (TP + FN) if (TP + FN) != 0 else 0
+    FDR = FP / (TP + FP) if (TP + FP) != 0 else 0
+    
+    results.append({
             'model_index': idx + 1,
-            'MDR': mdr,
-            'FDR': fdr
+            'MDR': MDR,
+            'FDR': FDR
         })
-    return results
 
-# calculate MDR and FDR 
-ket_qua = tinh_mdr_fdr(cmats)
-
-# print results
-for res in ket_qua:
+for res in results:
     print(f"Model {res['model_index']}: MDR = {res['MDR']:.4f}, FDR = {res['FDR']:.4f}")
 ```
 ![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/evaluation2.PNG)
@@ -847,13 +838,13 @@ import matplotlib.pyplot as plt
 # dataset of models
 models = [
     {
-        'name': 'PQ-CNN',
+        'name': 'PrQ-CNN',
         'size': 22.28,
         'accuracy': 92.0,
         'speed_ras': 76.3,
         'speed_kaggle': 54.0,
-        'MDR': 0.0804,
-        'FDR': 0.3020
+        'MDR': 0.1268,
+        'FDR': 0.0591
     },
     {
         'name': 'ConvNeXt',
@@ -861,8 +852,8 @@ models = [
         'accuracy': 98.0,
         'speed_ras': 234.3,
         'speed_kaggle': 71.6,
-        'MDR': 0.0235,
-        'FDR': 0.2712
+        'MDR': 0.0387,
+        'FDR': 0.0147
     },
     {
         'name': 'VGG16',
@@ -870,8 +861,8 @@ models = [
         'accuracy': 89.0,
         'speed_ras': 472.2,
         'speed_kaggle': 90.4,
-        'MDR': 0.1094,
-        'FDR': 0.2109
+        'MDR': 0.1951,
+        'FDR': 0.0609
     },
     {
         'name': 'MobileNetV2',
@@ -879,8 +870,8 @@ models = [
         'accuracy': 88.0,
         'speed_ras': 130.4,
         'speed_kaggle': 78.5,
-        'MDR': 0.1150,
-        'FDR': 0.1453
+        'MDR': 0.2221,
+        'FDR': 0.0463
     },
     {
         'name': 'ResNet',
@@ -888,8 +879,8 @@ models = [
         'accuracy': 91.0,
         'speed_ras': 133.4,
         'speed_kaggle': 72.9,
-        'MDR': 0.0887,
-        'FDR': 0.1480
+        'MDR': 0.1709,
+        'FDR': 0.0346
     },
     {
         'name': 'EfficientNet',
@@ -897,10 +888,11 @@ models = [
         'accuracy': 91.0,
         'speed_ras': 250.0,
         'speed_kaggle': 91.0,
-        'MDR': 0.0899,
-        'FDR': 0.1726
+        'MDR': 0.1682,
+        'FDR': 0.0405
     }
 ]
+
 
 # create DataFrame
 df = pd.DataFrame(models)
@@ -937,13 +929,13 @@ import pandas as pd
 # dataset of models
 models = [
     {
-        'name': 'PQ-CNN',
+        'name': 'PrQ-CNN',
         'size': 22.28,
         'accuracy': 92.0,
         'speed_ras': 76.3,
         'speed_kaggle': 54.0,
-        'MDR': 0.0804,
-        'FDR': 0.3020
+        'MDR': 0.1268,
+        'FDR': 0.0591
     },
     {
         'name': 'ConvNeXt',
@@ -951,8 +943,8 @@ models = [
         'accuracy': 98.0,
         'speed_ras': 234.3,
         'speed_kaggle': 71.6,
-        'MDR': 0.0235,
-        'FDR': 0.2712
+        'MDR': 0.0387,
+        'FDR': 0.0147
     },
     {
         'name': 'VGG16',
@@ -960,8 +952,8 @@ models = [
         'accuracy': 89.0,
         'speed_ras': 472.2,
         'speed_kaggle': 90.4,
-        'MDR': 0.1094,
-        'FDR': 0.2109
+        'MDR': 0.1951,
+        'FDR': 0.0609
     },
     {
         'name': 'MobileNetV2',
@@ -969,8 +961,8 @@ models = [
         'accuracy': 88.0,
         'speed_ras': 130.4,
         'speed_kaggle': 78.5,
-        'MDR': 0.1150,
-        'FDR': 0.1453
+        'MDR': 0.2221,
+        'FDR': 0.0463
     },
     {
         'name': 'ResNet',
@@ -978,8 +970,8 @@ models = [
         'accuracy': 91.0,
         'speed_ras': 133.4,
         'speed_kaggle': 72.9,
-        'MDR': 0.0887,
-        'FDR': 0.1480
+        'MDR': 0.1709,
+        'FDR': 0.0346
     },
     {
         'name': 'EfficientNet',
@@ -987,11 +979,10 @@ models = [
         'accuracy': 91.0,
         'speed_ras': 250.0,
         'speed_kaggle': 91.0,
-        'MDR': 0.0899,
-        'FDR': 0.1726
+        'MDR': 0.1682,
+        'FDR': 0.0405
     }
 ]
-
 
 # convert to DataFrame
 df = pd.DataFrame(models)
