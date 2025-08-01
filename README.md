@@ -177,7 +177,7 @@ print(report)
 ![alt text](https://github.com/famtrungkien/waste-sorting/blob/main/images/evaluations/orginil_cnn_model.PNG)
 
 
-## 1.2. Evaluation of PQ-CNN model
+## 1.2. Evaluation of PrQ-CNN model
 ```python
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
