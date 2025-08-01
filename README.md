@@ -1,6 +1,6 @@
 # Organic Vs Recyclable Waste Classifier
 
-In this notebook we will deal with a dataset containing 25,000 images of waste. This task is to build a model to classify this waste into organic waste and recyclable waste. We will experiment with this to Raspberry Pi hardware with flowing classifiers:
+In this notebook, I will deal with a dataset containing 25,000 images of waste. The task is to build a model to classify this waste into organic waste and recyclable waste. I will experiment with this on Raspberry Pi hardware using the following classifiers:
 
 * Pruning-Quantization-CNN
 * ConvneXt
